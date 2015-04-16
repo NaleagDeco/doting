@@ -1,4 +1,5 @@
 #!/bin/sh
 
 echo $PWD
+touch ~/.testrc
 exit 0
