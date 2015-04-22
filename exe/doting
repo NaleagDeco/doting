@@ -1,11 +1,23 @@
 #!/usr/bin/env ruby
 
-FILENAME = '.testrc'
-FILEPATH = File.join(File.expand_path(ENV['HOME']), FILENAME)
+require 'json'
+
+BASEPATH = File.expand_path('~/.dotfiles')
+SRCPATH = File.join(BASEPATH, 'src')
+profile = File.join(BASEPATH, 'profiles', "#{ARGV[1]}.json")
+f = File.open(profile, 'r')
+s = IO.read f
+f.close
+data = JSON.parse(s)
 
 case ARGV[0]
 when 'install'
-  File.open(FILEPATH, 'w') {}
+  data.each do |k, v|
+    File.symlink(File.join(SRCPATH, k), File.join(ENV['HOME'], v))
+  end
+
 when 'uninstall'
-  File.delete(FILEPATH) if File.exists? FILEPATH
+  data.each do |k, v|
+    File.unlink(File.join(ENV['HOME'], v))
+  end
 end
