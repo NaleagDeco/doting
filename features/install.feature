@@ -18,7 +18,6 @@ Feature: Install dotfiles
     """
     And an empty file named ".dotfiles/src/testrc"
 
-  @announce
   Scenario: Basic symlink mapping
     When I run `doting install testing`
     Then a file named "~/.testrc" should exist
@@ -33,7 +32,3 @@ Feature: Install dotfiles
     When I run `doting install testing1`
     Then a file named "~/.test1rc" should exist
     And a file named "~/.testrc" should not exist 
-
-  Scenario: Basic symlink unmapping
-    When I run `doting uninstall testing`
-    Then a file named "~/.testrc" should not exist
