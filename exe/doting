@@ -12,12 +12,12 @@ data = JSON.parse(s)
 
 case ARGV[0]
 when 'install'
-  data.each do |k, v|
+  data["symlinks"].each do |k, v|
     File.symlink(File.join(SRCPATH, k), File.join(ENV['HOME'], v))
   end
 
 when 'uninstall'
-  data.each do |k, v|
+  data["symlinks"].each do |k, v|
     File.unlink(File.join(ENV['HOME'], v))
   end
 end

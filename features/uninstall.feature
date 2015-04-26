@@ -11,7 +11,7 @@ Feature: Uninstall dotfiles
 
     And a file named ".dotfiles/profiles/testing.json" with:
     """
-    {"testrc":".testrc"}
+    {"symlinks": {"testrc":".testrc"}}
     """
     And an empty file named ".dotfiles/src/testrc"
 
@@ -22,7 +22,7 @@ Feature: Uninstall dotfiles
   Scenario: Selective symlink unmapping
     Given a file named ".dotfiles/profiles/testing1.json" with:
     """
-    {"test1rc":".test1rc"}
+    {"symlinks": {"test1rc":".test1rc"}}
     """
     And an empty file named ".dotfiles/src/test1rc"
 
