@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'json'
+require 'fileutils'
 
 BASEPATH = File.expand_path('~/.dotfiles')
-SRCPATH = File.join(BASEPATH, 'src')
 profile = File.join(BASEPATH, 'profiles', "#{ARGV[1]}.json")
 f = File.open(profile, 'r')
 s = IO.read f
@@ -13,7 +13,10 @@ data = JSON.parse(s)
 case ARGV[0]
 when 'install'
   data["symlinks"].each do |k, v|
-    File.symlink(File.join(SRCPATH, k), File.join(ENV['HOME'], v))
+    target = File.join(ENV['HOME'], v)
+    location = File.dirname(target)
+    FileUtils.mkdir_p location unless Dir.exist? location
+    FileUtils.ln_s(File.join(BASEPATH, k), target, :force => true)
   end
 
 when 'uninstall'

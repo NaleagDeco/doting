@@ -1,4 +1,4 @@
 # Version information for Doting
 module Doting
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 end

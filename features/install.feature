@@ -14,7 +14,7 @@ Feature: Install dotfiles
 
     And a file named ".dotfiles/profiles/testing.json" with:
     """
-    {"symlinks": {"testrc":".testrc"}}
+    {"symlinks": {"src/testrc":".testrc"}}
     """
     And an empty file named ".dotfiles/src/testrc"
 
@@ -25,7 +25,7 @@ Feature: Install dotfiles
   Scenario: Selective symlink mapping
     Given a file named ".dotfiles/profiles/testing1.json" with:
     """
-    {"symlinks": {"test1rc":".test1rc"}}
+    {"symlinks": {"src/test1rc":".test1rc"}}
     
     """
     And an empty file named ".dotfiles/src/test1rc"
@@ -33,3 +33,17 @@ Feature: Install dotfiles
     When I run `doting install testing1`
     Then a file named "~/.test1rc" should exist
     And a file named "~/.testrc" should not exist 
+
+  Scenario: Auto-create parent folders
+    Given a file named ".dotfiles/profiles/testing1.json" with:
+    """
+    {"symlinks": {"src/test1rc":".parent/child/.test1rc"}}
+    """
+    And an empty file named ".dotfiles/src/test1rc"
+    When I run `doting install testing1`
+    Then a file named "~/.parent/child/.test1rc" should exist
+
+  Scenario: Overwrite existing symlinks
+    Given an empty file named "~/.testrc"
+    When I run `doting install testing`
+    Then a file named "~/.testrc" should exist
