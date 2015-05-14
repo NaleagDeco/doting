@@ -16,6 +16,9 @@ when 'install'
     target = File.join(ENV['HOME'], v)
     location = File.dirname(target)
     FileUtils.mkdir_p location unless Dir.exist? location
+    if File.directory?(target) && !File.symlink?(target)
+      FileUtils.rm_r target
+    end
     FileUtils.ln_s(File.join(BASEPATH, k), target, :force => true)
   end
 

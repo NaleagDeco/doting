@@ -43,7 +43,13 @@ Feature: Install dotfiles
     When I run `doting install testing1`
     Then a file named "~/.parent/child/.test1rc" should exist
 
-  Scenario: Overwrite existing symlinks
+  Scenario: Overwrite existing files
     Given an empty file named "~/.testrc"
+    When I run `doting install testing`
+    Then a file named "~/.testrc" should exist
+
+  @announce
+  Scenario: Overwrite existing directories
+    Given a directory named "~/.testrc"
     When I run `doting install testing`
     Then a file named "~/.testrc" should exist
