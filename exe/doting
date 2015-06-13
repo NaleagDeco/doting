@@ -3,27 +3,39 @@
 require 'json'
 require 'fileutils'
 
+require 'doting'
+
 BASEPATH = File.expand_path('~/.dotfiles')
 profile = File.join(BASEPATH, 'profiles', "#{ARGV[1]}.json")
-f = File.open(profile, 'r')
-s = IO.read f
-f.close
-data = JSON.parse(s)
+data = JSON.parse(File.open(profile, 'r').read)
 
 case ARGV[0]
 when 'install'
-  data["symlinks"].each do |k, v|
+  data['symlinks'].each do |k, v|
+    src = File.join(BASEPATH, k)
     target = File.join(ENV['HOME'], v)
     location = File.dirname(target)
-    FileUtils.mkdir_p location unless Dir.exist? location
-    if File.directory?(target) && !File.symlink?(target)
-      FileUtils.rm_r target
-    end
-    FileUtils.ln_s(File.join(BASEPATH, k), target, :force => true)
-  end
 
+    # Create parent directories if they don't already exist
+    FileUtils.mkdir_p location unless Dir.exist? location
+    # Remove existing target
+    if File.exist? target
+      File.unlink target if File.file? target
+      Dir.unlink target if File.directory? target
+    end
+    # If a file, templatize the file
+    if File.file?(src)
+      output = Doting::Contextualizer.contextualize(File.open(src).read,
+                                                    data['context'])
+      File.open(target, 'w') do |f|
+        f << output
+      end
+    end
+    FileUtils.ln_s(src, target) if File.directory?(src)
+  end
 when 'uninstall'
-  data["symlinks"].each do |k, v|
-    File.unlink(File.join(ENV['HOME'], v))
+  data['symlinks'].each do |k, v|
+    target = File.join(ENV['HOME'], v)
+    File.unlink File.join(target)
   end
 end

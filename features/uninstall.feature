@@ -30,5 +30,4 @@ Feature: Uninstall dotfiles
     And I run `doting install testing1`
     And I run `doting uninstall testing1`
     Then a file named "~/.test1rc" should not exist
-    And a file named "~/.testrc" should exist 
-
+    And a file named "~/.testrc" should exist
