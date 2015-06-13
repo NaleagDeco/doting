@@ -7,7 +7,12 @@ require 'doting'
 
 BASEPATH = File.expand_path('~/.dotfiles')
 profile = File.join(BASEPATH, 'profiles', "#{ARGV[1]}.json")
-data = JSON.parse(File.open(profile, 'r').read)
+begin
+  data = JSON.parse(File.open(profile, 'r').read)
+rescue JSON::ParserError => e
+  puts "CONFIGURATION FILE ERROR: #{e.to_s}"
+  return 1
+end
 
 case ARGV[0]
 when 'install'
