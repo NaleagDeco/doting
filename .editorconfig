@@ -13,7 +13,6 @@ trim_trailing_whitespace = true
 
 # Assume an indent convention of 4 spaces by default
 indent_style = space
-indent_size = 4
 
 # Assume UTF-8 unless specified
 charset = utf-8
