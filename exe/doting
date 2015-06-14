@@ -30,8 +30,11 @@ when 'install'
     FileUtils.mkdir_p location unless Dir.exist? location
     # Remove existing target
     if File.exist? target
-      File.unlink target if File.file? target
-      Dir.unlink target if File.directory? target
+      if File.file?(target) || File.symlink?(target)
+        File.unlink target
+      else
+        Dir.unlink target
+      end
     end
     # If a file, templatize the file
     if File.file?(src)
